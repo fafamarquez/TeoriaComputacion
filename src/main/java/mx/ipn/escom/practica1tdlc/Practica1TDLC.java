@@ -1,0 +1,16 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package mx.ipn.escom.practica1tdlc;
+
+/**
+ *
+ * @author rafael-marquez
+ */
+public class Practica1TDLC {
+
+    public static void main(String[] args) {
+        System.out.println("Hello World!");
+    }
+}
