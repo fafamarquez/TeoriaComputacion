@@ -4,7 +4,11 @@
  */
 package mx.ipn.escom.practica1tdlc;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -54,4 +58,17 @@ public class Cadenas {
         }
         return subcadenas;
     }
+    
+    public void exportarResultados(String nombreArchivo, String titulo, Collection<String> datos) {
+    try (PrintWriter out = new PrintWriter(new FileWriter(nombreArchivo, true))) {
+        out.println("=== " + titulo + " ===");
+        for (String linea : datos) {
+            out.println(linea);
+        }
+        out.println();
+        System.out.println("Se guardó correctamente en " + nombreArchivo);
+    } catch (IOException e) {
+        System.err.println("Error al escribir el archivo: " + e.getMessage());
+    }
+}
 }
