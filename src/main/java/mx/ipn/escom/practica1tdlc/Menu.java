@@ -59,6 +59,7 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 500, 60));
 
         jButton2.setText("START");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
         getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 330, 230, 60));
 
         pack();
@@ -69,6 +70,12 @@ public class Menu extends javax.swing.JFrame {
         CadenasInterfaz cadenasinterfaz = new CadenasInterfaz();
         cadenasinterfaz.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.setVisible(false);
+        CerraduraInterfaz cinterfaz = new CerraduraInterfaz();
+        cinterfaz.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
