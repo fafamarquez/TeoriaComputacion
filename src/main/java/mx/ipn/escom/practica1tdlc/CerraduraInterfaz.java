@@ -4,25 +4,48 @@
  */
 package mx.ipn.escom.practica1tdlc;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author etcha
  */
 public class CerraduraInterfaz extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CerraduraInterfaz.class.getName());
+    private Cerradura cerradura;
+    private String ultimoResultadoTexto;
 
     /**
      * Creates new form CerraduraInterfaz
      */
     public CerraduraInterfaz() {
+
+        cerradura = new Cerradura();
+
         initComponents();
+
+        // Verificar que cerradura no sea null
+        if (cerradura == null) {
+            System.err.println("Error: cerradura es null después de la inicialización");
+            cerradura = new Cerradura(); // Reintentar inicialización
+        }
         jLabel1.setVisible(false);
         jLabel4.setVisible(false);
         jLabel5.setVisible(false);
-        jLabel6.setVisible(false);
+        jScrollPane1.setVisible(false);
         jTextField1.setVisible(false);
         jButton1.setVisible(false);
+
+        // Configurar el JTextArea
+        configurarTextArea();
     }
 
     /**
@@ -42,12 +65,14 @@ public class CerraduraInterfaz extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jButtonExportar = new javax.swing.JButton();
+        jButtonVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 500));
         setPreferredSize(new java.awt.Dimension(800, 500));
-        setResizable(false);
 
         jButton1.setText("Determinado");
         jButton1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -71,7 +96,16 @@ public class CerraduraInterfaz extends javax.swing.JFrame {
 
         jLabel5.setText("El resultado es:");
 
-        jLabel6.setText("xxxxxxxx");
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jButtonExportar.setText("Exportar");
+        jButtonExportar.addActionListener(this::jButtonExportarActionPerformed);
+
+        jButtonVolver.setText("Volver");
+        jButtonVolver.setActionCommand("Volver");
+        jButtonVolver.addActionListener(this::jButtonVolverActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -82,13 +116,18 @@ public class CerraduraInterfaz extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton1))
                             .addComponent(jLabel2)
-                            .addComponent(jLabel1)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jButton1)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonVolver)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jButtonExportar))
+                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(295, 295, 295)
                         .addComponent(jLabel3))
@@ -100,8 +139,8 @@ public class CerraduraInterfaz extends javax.swing.JFrame {
                         .addComponent(jLabel5))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel6)))
-                .addContainerGap(297, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 743, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(206, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,41 +158,302 @@ public class CerraduraInterfaz extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(jButtonExportar)
+                    .addComponent(jButtonVolver))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
-                .addContainerGap(281, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(93, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:   
+        // Botón Determinado - mostrar 100 resultados
+        try {
+            String cadena = jTextField2.getText().trim();
+            if (cadena.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Por favor ingrese una cadena de caracteres",
+                        "Error de validación",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Validar que la cadena contenga solo caracteres válidos (letras, números o símbolos)
+            if (!validarCaracteresValidos(cadena)) {
+                JOptionPane.showMessageDialog(this,
+                        "La cadena contiene caracteres no válidos.\n"
+                        + "Use solo letras, números o símbolos básicos (como *, +, -, etc.)",
+                        "Error de validación",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            procesarYMostrarResultados(cadena, 100);
+
+        } catch (Exception e) {
+            logger.log(java.util.logging.Level.SEVERE, "Error al procesar", e);
+            JOptionPane.showMessageDialog(this,
+                    "Error al procesar: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
-     String cadena = jTextField2.getText();
-     if(!cadena.isEmpty()){
-         jLabel1.setVisible(true);
-         jLabel4.setVisible(true);
-         jTextField1.setVisible(true);
-         jButton1.setVisible(true);
-     }
+        // Al presionar ENTER en el campo de cadena
+        String cadena = jTextField2.getText().trim();
+        if (!cadena.isEmpty()) {
+            if (validarCaracteresValidos(cadena)) {
+                jLabel1.setVisible(true);
+                jLabel4.setVisible(true);
+                jTextField1.setVisible(true);
+                jButton1.setVisible(true);
+                jTextField1.requestFocus();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "La cadena contiene caracteres no válidos.\n"
+                        + "Use solo letras, números o símbolos básicos (como *, +, -, etc.)",
+                        "Error de validación",
+                        JOptionPane.ERROR_MESSAGE);
+                jTextField2.setText("");
+            }
+        }
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
-        String cadena1 = jTextField1.getText();
-        if(!cadena1.isEmpty()){
-        jLabel5.setVisible(true);
-        jLabel6.setVisible(true);
-     }
+        // Al presionar ENTER en el campo de cantidad
+        try {
+            String cadena = jTextField2.getText().trim();
+            String cantidadStr = jTextField1.getText().trim();
+
+            if (cadena.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Primero debe ingresar una cadena",
+                        "Error de validación",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Validar y procesar la cantidad
+            int cantidad = validarYProcesarCantidad(cantidadStr);
+            if (cantidad > 0) {
+                procesarYMostrarResultados(cadena, cantidad);
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor ingrese un número válido",
+                    "Error de validación",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            logger.log(java.util.logging.Level.SEVERE, "Error al procesar", e);
+            JOptionPane.showMessageDialog(this,
+                    "Error al procesar: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    
+    
+    private void jButtonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVolverActionPerformed
+        // Volver al menú principal
+        this.dispose(); // Cerrar esta ventana
+        Menu menu = new Menu();
+        menu.setVisible(true);
+    }//GEN-LAST:event_jButtonVolverActionPerformed
+
+    private void jButtonExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExportarActionPerformed
+        // Exportar resultados a archivo de texto
+        if (ultimoResultadoTexto == null || ultimoResultadoTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "No hay resultados para exportar",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile(new java.io.File("cerradura_resultados.txt"));
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de texto", "txt");
+        fileChooser.setFileFilter(filter);
+
+        int result = fileChooser.showSaveDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            try (PrintWriter writer = new PrintWriter(new FileWriter(fileChooser.getSelectedFile()))) {
+                writer.print(ultimoResultadoTexto);
+                JOptionPane.showMessageDialog(this,
+                        "Archivo guardado exitosamente en:\n" + fileChooser.getSelectedFile().getAbsolutePath(),
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                logger.log(java.util.logging.Level.SEVERE, "Error al guardar", e);
+                JOptionPane.showMessageDialog(this,
+                        "Error al guardar el archivo: " + e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_jButtonExportarActionPerformed
+
+    private boolean validarCaracteresValidos(String cadena) {
+        if (cadena == null || cadena.isEmpty()) {
+            return false;
+        }
+        // Permitir letras, números y algunos símbolos comunes
+        return cadena.matches("^[a-zA-Z0-9\\*\\+\\-\\/\\(\\)\\{\\}\\[\\]\\_\\s]+$");
+    }
+
+    private int validarYProcesarCantidad(String cantidadStr) {
+        if (cantidadStr == null || cantidadStr.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor ingrese una cantidad",
+                    "Error de validación",
+                    JOptionPane.ERROR_MESSAGE);
+            return -1;
+        }
+
+        try {
+            int cantidad = Integer.parseInt(cantidadStr.trim());
+
+            // Validar que sea positiva
+            if (cantidad <= 0) {
+                JOptionPane.showMessageDialog(this,
+                        "La cantidad debe ser un número positivo",
+                        "Error de validación",
+                        JOptionPane.ERROR_MESSAGE);
+                return -1;
+            }
+
+            // Validar que sea menor a 100
+            if (cantidad >= 100) {
+                JOptionPane.showMessageDialog(this,
+                        "La cantidad debe ser menor a 100",
+                        "Error de validación",
+                        JOptionPane.ERROR_MESSAGE);
+                return -1;
+            }
+
+            return cantidad;
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                    "La cantidad debe ser un número entero",
+                    "Error de validación",
+                    JOptionPane.ERROR_MESSAGE);
+            return -1;
+        }
+    }
+
+    private void procesarYMostrarResultados(String cadenaStr, int limiteVisualizacion) {
+        try {
+            // Convertir la cadena ingresada en un alfabeto (caracteres únicos)
+            String[] caracteres = cadenaStr.split("");
+            // Usar un Set para eliminar duplicados
+            java.util.LinkedHashSet<String> caracteresUnicos = new java.util.LinkedHashSet<>();
+            for (String c : caracteres) {
+                if (!c.trim().isEmpty() && !c.equals(" ")) {
+                    caracteresUnicos.add(c);
+                }
+            }
+
+            List<String> alfabeto = new ArrayList<>(caracteresUnicos);
+
+            // Calcular la longitud máxima basada en la cantidad a visualizar
+            int longitudMax = 3; // Por defecto
+            if (alfabeto.size() > 0) {
+                if (limiteVisualizacion <= 10) {
+                    longitudMax = 2;
+                } else {
+                    longitudMax = 3;
+                }
+            }
+
+            // Calcular cerraduras
+            Set<String> kleene = cerradura.calcularKleene(alfabeto, longitudMax);
+            Set<String> positiva = cerradura.calcularPositiva(alfabeto, longitudMax);
+
+            // Construir resultados
+            StringBuilder resultado = new StringBuilder();
+            resultado.append("=============================================\n");
+            resultado.append("CERRADURA DE KLEENE Y POSITIVA\n");
+            resultado.append("=============================================\n\n");
+            resultado.append("Fecha: ").append(new java.util.Date()).append("\n\n");
+            resultado.append("Alfabeto: {").append(String.join(", ", alfabeto)).append("}\n");
+            resultado.append("Longitud máxima: ").append(longitudMax).append("\n\n");
+
+            resultado.append("CERRADURA DE KLEENE (Σ*):\n");
+            resultado.append("Total: ").append(kleene.size()).append(" cadenas\n");
+            resultado.append("Mostrando primeras ").append(Math.min(limiteVisualizacion, kleene.size())).append(":\n");
+            resultado.append(formatearListaConLimite(kleene, limiteVisualizacion)).append("\n\n");
+
+            resultado.append("CERRADURA POSITIVA (Σ+):\n");
+            resultado.append("Total: ").append(positiva.size()).append(" cadenas\n");
+            resultado.append("Mostrando primeras ").append(Math.min(limiteVisualizacion, positiva.size())).append(":\n");
+            resultado.append(formatearListaConLimite(positiva, limiteVisualizacion)).append("\n\n");
+
+            resultado.append("=============================================\n");
+            resultado.append("FIN DEL REPORTE\n");
+            resultado.append("=============================================");
+
+            // Guardar el resultado para posible exportación
+            ultimoResultadoTexto = resultado.toString();
+
+            // Mostrar en la interfaz
+            jLabel5.setVisible(true);
+            jScrollPane1.setVisible(true);
+            jTextArea1.setText(resultado.toString());
+            jTextArea1.setCaretPosition(0);
+
+        } catch (Exception e) {
+            logger.log(java.util.logging.Level.SEVERE, "Error al procesar resultados", e);
+            JOptionPane.showMessageDialog(this,
+                    "Error al procesar los resultados: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void configurarTextArea() {
+        jTextArea1.setEditable(false);
+        jTextArea1.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 12));
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setWrapStyleWord(true);
+    }
+
+    private String formatearListaConLimite(Set<String> lista, int limite) {
+        List<String> listaOrdenada = new ArrayList<>(lista);
+        StringBuilder sb = new StringBuilder();
+
+        int elementosAMostrar = Math.min(limite, listaOrdenada.size());
+        for (int i = 0; i < elementosAMostrar; i++) {
+            sb.append(listaOrdenada.get(i));
+            if (i < elementosAMostrar - 1) {
+                if ((i + 1) % 10 == 0) {
+                    sb.append(",\n  ");
+                } else {
+                    sb.append(", ");
+                }
+            }
+        }
+
+        if (listaOrdenada.size() > limite) {
+            sb.append("\n... y ").append(listaOrdenada.size() - limite).append(" cadenas más");
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Formatea una lista con un límite de elementos a mostrar
+     */
     /**
      * @param args the command line arguments
      */
@@ -181,12 +481,15 @@ public class CerraduraInterfaz extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonExportar;
+    private javax.swing.JButton jButtonVolver;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
