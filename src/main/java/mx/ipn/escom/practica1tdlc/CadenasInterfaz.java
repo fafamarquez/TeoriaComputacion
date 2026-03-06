@@ -4,6 +4,8 @@
  */
 package mx.ipn.escom.practica1tdlc;
 
+import java.util.List;
+
 /**
  *
  * @author rafael-marquez
@@ -28,21 +30,130 @@ public class CadenasInterfaz extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtEntrada = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtSubcadenas = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtPrefijos = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtSufijos = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("EJERCICIO 1");
+        setMinimumSize(new java.awt.Dimension(800, 500));
+        setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Ubuntu Sans", 3, 18)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("EJERCICIO 1. SUBCADENAS, PREFIJOS Y SUFIJOS");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 20, 430, -1));
+
+        jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
+        jLabel2.setText("SUBCADENAS");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 80, 570, 60));
+
+        txtEntrada.setHighlighter(null);
+        txtEntrada.addActionListener(this::txtEntradaActionPerformed);
+        getContentPane().add(txtEntrada, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 60, 180, 40));
+
+        txtSubcadenas.setColumns(20);
+        txtSubcadenas.setRows(5);
+        jScrollPane1.setViewportView(txtSubcadenas);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 130, 240, 360));
+
+        txtPrefijos.setColumns(20);
+        txtPrefijos.setRows(5);
+        jScrollPane2.setViewportView(txtPrefijos);
+
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 240, 360));
+
+        txtSufijos.setColumns(20);
+        txtSufijos.setRows(5);
+        jScrollPane3.setViewportView(txtSufijos);
+
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 130, 240, 360));
+
+        jLabel3.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
+        jLabel3.setText("INGRESE LA CADENA PARA ARROJAR TODAS SUS SUBCADENAS, PREFIJOS Y SUFIJOS: ");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 570, 60));
+
+        jLabel4.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
+        jLabel4.setText("PREFIJOS");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 570, 60));
+
+        jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
+        jLabel5.setText("SUFIJOS");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 80, 570, 60));
+
+        jButton1.setText("TXT");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
+
+        jButton2.setText("MENU");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, -1, -1));
+
+        jButton3.setText("MENU");
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEntradaActionPerformed
+
+    Cadenas logica = new Cadenas();
+    String entrada = txtEntrada.getText();
+    
+    txtPrefijos.setText("");
+    txtSufijos.setText("");
+    txtSubcadenas.setText("");
+    
+    for (String p : logica.obtenerPrefijos(entrada)) {
+        txtPrefijos.append(p + "\n");
+    }
+    
+    for (String s : logica.obtenerSufijos(entrada)) {
+        txtSufijos.append(s + "\n");
+    }
+    
+    for (String sub : logica.obtenerSubcadenas(entrada)) {
+        txtSubcadenas.append(sub + "\n");
+    }
+    }//GEN-LAST:event_txtEntradaActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+    this.dispose(); 
+    Menu ventanaPrincipal = new Menu();
+    ventanaPrincipal.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    javax.swing.JFileChooser selector = new javax.swing.JFileChooser();
+    selector.setDialogTitle("Guardar resultados");
+    if (selector.showSaveDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
+        String ruta = selector.getSelectedFile().getAbsolutePath();
+        if (!ruta.toLowerCase().endsWith(".txt")) ruta += ".txt";
+        Cadenas logica = new Cadenas();
+        java.util.List<String> p = java.util.Arrays.asList(txtPrefijos.getText().split("\n"));
+        java.util.List<String> s = java.util.Arrays.asList(txtSufijos.getText().split("\n"));
+        java.util.List<String> sub = java.util.Arrays.asList(txtSubcadenas.getText().split("\n"));
+        logica.exportarResultados(ruta, "PREFIJOS", p);
+        logica.exportarResultados(ruta, "SUFIJOS", s);
+        logica.exportarResultados(ruta, "SUBCADENAS", sub);
+        javax.swing.JOptionPane.showMessageDialog(this, "Guardado en: " + ruta);
+    }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -70,5 +181,20 @@ public class CadenasInterfaz extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextField txtEntrada;
+    private javax.swing.JTextArea txtPrefijos;
+    private javax.swing.JTextArea txtSubcadenas;
+    private javax.swing.JTextArea txtSufijos;
     // End of variables declaration//GEN-END:variables
 }
